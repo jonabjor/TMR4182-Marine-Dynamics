@@ -1,0 +1,66 @@
+\documentclass[11pt, a4paper, english]{NTNUoving}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage[nottoc]{tocbibind}
+
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{caption}
+\ovingnr{3}
+\ovingstekst{Jonas Bjørlo \\ Exercise}
+\semester{Marine Dynamics}
+\fag{TMR4182}
+\institutt{Department of Marine Technology}
+
+\begin{document}
+\section{Implementation of algorithms}
+\subsection{Constant average acceleration method}
+Upon initialization of the constant average method (CAA), we calculate the value of $\ddot{u}_0$ from the equation of motion
+\begin{equation}
+	\label{eq:eqnofmotion}
+	\ddot{u}_0 = \frac{1}{m}(P_0 - c\dot{u}_0 - ku_0)
+\end{equation}
+where $\dot{u}_0$ and $u_0$ are the initial conditions. We can now find the displacement at time $t_{i+1}$ from the equation:
+\begin{equation}
+	\label{eq:caadisplacement}
+	\left(\frac{4}{h^2} m + \frac{2}{h}c + k \right)u_{i+1} = P_{i+1} + m\ddot{u}_i + \left(\frac{4}{h}m + c \right) \dot{u}_i + \left(\frac{4}{h^2}m + \frac{2}{h}c\right)u_i
+\end{equation}
+With the displacement at time $t_{i+1}$, the acceleration $\ddot{u}_{i+1}$ is given by
+\begin{equation}
+	\label{eq:caaacc}
+	\ddot{u}_{i+1} = \frac{4}{h^2}(u_{i+1} - u_i - \dot{u}_ih)-\ddot{u}_i
+\end{equation} 
+The last step in the process is to calculate $\dot{u}_{i+1}$ given by
+\begin{equation}
+	\label{eq:caavelocity}
+	\dot{u}_{i+1} = \dot{u}_i + \frac{h}{2}(\ddot{u}_i + \ddot{u}_{i+1})
+\end{equation}
+The algorithm then jumps to the next timestep, and calculates step \eqref{eq:caadisplacement}, \eqref{eq:caaacc} and \eqref{eq:caavelocity} for each iteration. The implementation is given in Appendix I
+\subsection{4th order Runge-Kutta algorithm}
+To implement the Runge-Kutta algorithm we need to write the equation of motion as two first order ODE's:
+\begin{align}
+	\label{eq:firstorderode}
+	\dot{u} &= \dot{x}_1 = x_2 \\
+	\dot{u} &= \dot{x}_2 = \frac{1}{m}(P-cx_2-kx_1)
+\end{align}
+This will be our function $f$ that computes the first derivative. We can write it in the form
+\begin{equation}
+	f(x,t) = \begin{cases}
+	x_2 \\
+	\frac{1}{m}(P-cx_2-kx_1)
+	\end{cases}
+\end{equation}
+We start by calculating the derivative at the current point
+\begin{equation}
+	K_0 = f(t_i,x_i)
+\end{equation}
+\section{Application}
+\subsection{Simple harmonic load}
+\subsection{Changing load frequency and amplitude}
+\subsection{Short impulsive load}
+\end{document}
