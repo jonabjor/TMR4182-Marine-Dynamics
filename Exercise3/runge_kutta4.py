@@ -1,3 +1,4 @@
+# Filename: runge_kutta4.py
 import numpy as np
 
 
@@ -17,14 +18,17 @@ def runge_kutta4(m, k, c, P, t, u0, udot0):
 
     # Runge-Kutta 4th order method
     for i in range(len(t)-1):
-        # Computing K1, K2, K3 and K4
+        # Computing K1, K2, K3 and K4 with f1 and f2
         K0 = np.array([f1(t[i], u[i], v[i]), f2(t[i], u[i], v[i], P[i])])
+
         K1 = np.array([f1(t[i] + h/2, u[i] + h/2 * K0[0], v[i] + h/2 * K0[1]),
-                       f2(t[i] + h/2, u[i] + h/2 * K0[0], v[i] + h/2 * K0[1], P[i] + h/2 * P[i])])
+                       f2(t[i] + h/2, u[i] + h/2 * K0[0], v[i] + h/2 * K0[1], (P[i] + P[i+1])/2)])
+
         K2 = np.array([f1(t[i] + h/2, u[i] + h/2 * K1[0], v[i] + h/2 * K1[1]),
-                       f2(t[i] + h/2, u[i] + h/2 * K1[0], v[i] + h/2 * K1[1], P[i] + h/2 * P[i])])
-        K3 = np.array([f1(t[i] + h/2, u[i] + h/2 * K2[0], v[i] + h/2 * K2[1]),
-                       f2(t[i] + h/2, u[i] + h/2 * K2[0], v[i] + h/2 * K2[1], P[i] + h/2 * P[i])])
+                       f2(t[i] + h/2, u[i] + h/2 * K1[0], v[i] + h/2 * K1[1], (P[i] + P[i+1])/2)])
+
+        K3 = np.array([f1(t[i] + h, u[i] + h * K2[0], v[i] + h * K2[1]),
+                       f2(t[i] + h, u[i] + h * K2[0], v[i] + h * K2[1], P[i+1])])
 
         # Computing u and v from the weighted average given in the compendium
         u[i+1] = u[i] + h/6*(K0[0] + 2*K1[0] + 2*K2[0] + K3[0])

@@ -1,1 +1,11 @@
 __pycache__/
+*.aux
+*.log
+*.synctex.gz
+*.eps
+*.cls
+*.pdf
+*.png
+*.out
+*.toc
+_minted-main/

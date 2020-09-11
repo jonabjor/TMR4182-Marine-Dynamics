@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 from const_avg_acc import const_avg_acc
 from runge_kutta4 import runge_kutta4
 
+from task2_1 import response_vs_dlf  # Task 2.1
+from task2_2 import transient_regime  # Task 2.2
+
 plt.close('all')
 
 # Input dynamic system characteristics
@@ -17,11 +20,11 @@ u0 = 0
 udot0 = 0.0
 
 # Input load parameters
-h = 0.1  # time increment, s
-tmax = 100  # time duration, s
+h = 0.05  # time increment, s
+tmax = 60  # time duration, s
 t = np.arange(0, tmax, h)
 
-loadtype = 3
+loadtype = 1
 
 t = np.arange(0, tmax, h)
 
@@ -29,7 +32,7 @@ P = np.zeros(shape=(np.size(t)))
 
 
 if loadtype == 1:  # harmonic load
-    omega = 0.8           # frequency
+    omega = np.pi/8      # frequency
     amp = 1               # amplitude
     eps1 = np.pi/8       # phase angle
     P = amp*np.cos(omega*t+eps1)
@@ -63,25 +66,21 @@ rkstart = time.time()
 urk = runge_kutta4(m, k, c, P, t, u0, udot0)
 rkend = time.time()
 
-# Plot load P(t)
-plt.figure(1)
-plt.subplot(211)
-plt.plot(t, P, 'k')
-plt.xlabel('time, s')
-plt.ylabel('P(t), N')
+# Simple harmonic load
+'''
+# Calls for task 2.1
+P_0 = 1  # Load amplitude
+w = np.array([1.3, 1.5, 1.7, 2.0, 2.3])  # Load frequency
+response_vs_dlf(m, k, c, w, P_0, t, u0, udot0)  # Comparing SS response and DLF
+'''
+# Calls for task 2.2
+u0 = [0.0, 0.0, 0.0, 0.0, 0.9, 1.7]
+udot0 = [0.0, 0.0, 1.0, 10.0, 0.0, 0.0]
+c = [0.5, 7, 1, 1, 1, 1]
 
-# Plot u(t) from CAA and RK4 in same system
-plt.subplot(212)
-plt.plot(t, u, 'k', label='CAA')
-plt.plot(t, urk, 'b-', label='RK')
-plt.legend()
-plt.grid(True)
-plt.xlabel('time, s')
+# Load settings
+omega = np.pi/8      # frequency
+amp = 1               # amplitude
+P = amp*np.cos(omega*t)  # load P
 
-plt.show()
-
-tcaa = caaend-caastart
-print(tcaa)
-
-trk = rkend-rkstart
-print(trk)
+transient_regime(m, k, c, P, t, u0, udot0)  # Effect of u0, udot0, c
